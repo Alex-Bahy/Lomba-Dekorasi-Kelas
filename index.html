@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Lomba Dekorasi Kelas — HUT RI ke-81</title>
+<style>
+  :root{
+    --merah: #C8102E;
+    --merah-tua: #8E0B20;
+    --merah-muda: #FDEAEA;
+    --putih: #FFFFFF;
+    --krem: #FAF7F2;
+    --tinta: #241B1B;
+    --abu: #8A7E7E;
+    --garis: #EAD9D9;
+    --emas: #C79A3B;
+    --radius: 14px;
+    --shadow: 0 6px 20px rgba(200,16,46,0.10);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    background: var(--krem);
+    color: var(--tinta);
+    padding-bottom: 90px;
+  }
+
+  /* ===== HEADER ===== */
+  header.top{
+    background: linear-gradient(135deg, var(--merah) 0%, var(--merah-tua) 100%);
+    color: var(--putih);
+    padding: 22px 20px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; right:-30px; top:-30px;
+    width:140px; height:140px; border-radius:50%;
+    background: rgba(255,255,255,0.08);
+  }
+  header.top .eyebrow{
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0.85; font-weight: 600;
+  }
+  header.top h1{
+    margin: 4px 0 2px; font-size: 21px; font-weight: 800; line-height:1.25;
+  }
+  header.top p{
+    margin: 0; font-size: 13px; opacity: 0.9;
+  }
+
+  /* ===== TABS ===== */
+  nav.tabs{
+    display: flex;
+    background: var(--putih);
+    border-bottom: 1px solid var(--garis);
+    position: sticky; top: 0; z-index: 20;
+  }
+  nav.tabs button{
+    flex: 1; padding: 14px 8px; background: none; border: none;
+    font-size: 14px; font-weight: 700; color: var(--abu);
+    border-bottom: 3px solid transparent; cursor: pointer;
+  }
+  nav.tabs button.active{
+    color: var(--merah); border-bottom-color: var(--merah);
+  }
+
+  main{ padding: 18px 16px 8px; max-width: 560px; margin: 0 auto; }
+  section.view{ display:none; }
+  section.view.active{ display:block; }
+
+  .card{
+    background: var(--putih);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--garis);
+  }
+
+  label.field-label{
+    display:block; font-size: 13px; font-weight: 700; color: var(--merah-tua);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  select, textarea{
+    width: 100%; padding: 13px 14px; border-radius: 10px;
+    border: 1.5px solid var(--garis); background: var(--krem);
+    font-size: 16px; color: var(--tinta); font-family: inherit;
+    appearance: none; -webkit-appearance: none;
+  }
+  select{
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' stroke='%23C8102E' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 36px;
+  }
+  textarea{ resize: vertical; min-height: 70px; }
+  .field{ margin-bottom: 16px; }
+
+  .chipbar{ display:flex; flex-wrap:wrap; gap:6px; margin-top: 10px; }
+  .chip{
+    font-size: 11px; padding: 5px 10px; border-radius: 999px;
+    background: var(--merah-muda); color: var(--merah-tua); font-weight:600;
+    border: 1px solid #F3CFCF;
+  }
+  .chip.done{ background:#E7F5EA; color:#1F7A3E; border-color:#BFE3C9; }
+  .chip.done::before{ content:"✓ "; }
+
+  /* ===== KRITERIA ===== */
+  .kriteria-item{
+    padding: 14px 0; border-top: 1px solid var(--garis);
+  }
+  .kriteria-item:first-child{ border-top: none; padding-top: 4px; }
+  .kriteria-head{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;
+  }
+  .kriteria-nama{ font-size: 14.5px; font-weight: 700; }
+  .kriteria-bobot{ font-size: 12px; color: var(--abu); font-weight: 600; }
+  .kriteria-desc{ font-size: 12px; color: var(--abu); margin-bottom: 10px; line-height:1.4;}
+
+  .skor-row{ display:flex; align-items:center; gap:12px; }
+  input[type="range"]{
+    flex:1; -webkit-appearance:none; height: 6px; border-radius: 4px;
+    background: var(--garis); outline:none;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width: 24px; height:24px; border-radius:50%;
+    background: var(--merah); border: 3px solid var(--putih);
+    box-shadow: 0 2px 6px rgba(200,16,46,0.4); cursor:pointer;
+  }
+  .skor-badge{
+    min-width: 46px; text-align:center; font-weight:800; font-size:15px;
+    color: var(--merah); background: var(--merah-muda); border-radius:8px; padding:6px 0;
+  }
+
+  .bonus-section .kriteria-nama{ color: var(--emas); }
+  .bonus-label{
+    display:inline-block; font-size:10px; font-weight:800; color: var(--putih);
+    background: var(--emas); padding: 2px 8px; border-radius:999px; margin-left:6px;
+    letter-spacing:0.5px; text-transform:uppercase; vertical-align:middle;
+  }
+
+  button.submit-btn{
+    width:100%; padding:16px; border:none; border-radius: 12px;
+    background: var(--merah); color: var(--putih); font-size:16px; font-weight:800;
+    cursor:pointer; box-shadow: var(--shadow); letter-spacing:0.3px;
+  }
+  button.submit-btn:active{ transform: scale(0.98); }
+  button.submit-btn:disabled{ background: #D9B3B9; }
+
+  .toast{
+    position: fixed; left:16px; right:16px; bottom: 20px;
+    padding: 14px 16px; border-radius: 12px; font-size: 14px; font-weight:600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18); z-index: 50;
+    transform: translateY(120%); transition: transform 0.25s ease;
+  }
+  .toast.show{ transform: translateY(0); }
+  .toast.ok{ background:#1F7A3E; color:#fff; }
+  .toast.err{ background:#8E0B20; color:#fff; }
+
+  /* ===== LEADERBOARD ===== */
+  .lb-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .lb-header h2{ font-size:16px; margin:0; }
+  .lb-refresh{ font-size:11px; color:var(--abu); }
+  .lb-row{
+    display:flex; align-items:center; gap:12px;
+    background: var(--putih); border-radius: 12px; padding: 12px 14px; margin-bottom:8px;
+    border: 1px solid var(--garis); box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .lb-rank{
+    width: 34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px; background: var(--krem); color: var(--tinta); flex-shrink:0;
+  }
+  .lb-row.top1 .lb-rank{ background:#F4D35E; color:#5C4400; }
+  .lb-row.top2 .lb-rank{ background:#D9D9D9; color:#4A4A4A; }
+  .lb-row.top3 .lb-rank{ background:#E7B27B; color:#5C3A17; }
+  .lb-info{ flex:1; min-width:0; }
+  .lb-kelas{ font-weight:700; font-size:14.5px; }
+  .lb-meta{ font-size:11.5px; color:var(--abu); }
+  .lb-score{ font-weight:800; font-size:18px; color: var(--merah); text-align:right; }
+  .lb-score small{ display:block; font-weight:600; font-size:10px; color:var(--abu); }
+  .empty-state{ text-align:center; color:var(--abu); font-size:13px; padding: 30px 10px; }
+
+  .legend{
+    font-size: 11.5px; color: var(--abu); text-align:center; margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">SMK Negeri 1 Maluku Tengah</div>
+  <h1>Lomba Dekorasi Kelas &mdash; HUT RI ke-81</h1>
+  <p>Penilaian juri &amp; leaderboard peringkat kelas</p>
+</header>
+
+<nav class="tabs">
+  <button id="tab-input" class="active" onclick="switchTab('input')">📋 Input Nilai</button>
+  <button id="tab-lb" onclick="switchTab('lb')">🏆 Leaderboard</button>
+</nav>
+
+<main>
+
+  <!-- ================= HALAMAN INPUT ================= -->
+  <section id="view-input" class="view active">
+
+    <div class="card">
+      <div class="field">
+        <label class="field-label">Nama Juri</label>
+        <select id="selJuri" onchange="onJuriChange()">
+          <option value="">Pilih nama juri…</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="field-label">Kelas yang Dinilai</label>
+        <select id="selKelas" onchange="onKelasChange()">
+          <option value="">Pilih kelas…</option>
+        </select>
+      </div>
+      <div class="chipbar" id="statusChips"></div>
+    </div>
+
+    <form id="formNilai" style="display:none;">
+      <div class="card">
+        <div class="kriteria-head" style="margin-bottom:12px;">
+          <span class="kriteria-nama" style="font-size:15px;">Kriteria Dasar</span>
+          <span class="kriteria-bobot">Wajib — semua kelas</span>
+        </div>
+        <div id="kriteriaDasar"></div>
+      </div>
+
+      <div class="card bonus-section" id="cardBonus" style="display:none;">
+        <div class="kriteria-head" style="margin-bottom:12px;">
+          <span class="kriteria-nama" style="font-size:15px;">Kriteria Tambahan <span class="bonus-label">Bonus • Tipe B</span></span>
+        </div>
+        <div id="kriteriaBonus"></div>
+      </div>
+
+      <div class="card">
+        <label class="field-label">Catatan (opsional)</label>
+        <textarea id="catatan" placeholder="Catatan atau masukan untuk kelas ini…"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="btnSubmit">Simpan Penilaian</button>
+      <p class="legend">Mengirim ulang untuk juri &amp; kelas yang sama akan memperbarui nilai sebelumnya, bukan menduplikasi.</p>
+    </form>
+  </section>
+
+  <!-- ================= HALAMAN LEADERBOARD ================= -->
+  <section id="view-lb" class="view">
+    <div class="lb-header">
+      <h2>Peringkat Sementara</h2>
+      <span class="lb-refresh" id="lbUpdated">memuat…</span>
+    </div>
+    <div id="lbList"><div class="empty-state">Memuat data rekap…</div></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================================================================
+// GANTI URL INI dengan URL Web App hasil deploy Apps Script Anda
+// =====================================================================
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCVMcTe-dyR7AwMXhwCK2Pf5xu2FyGKNULFZzDznBMWbUTUhZMHHUICcR2vhU0nYON/exec";
+
+const KRITERIA_DASAR_DEF = [
+  { key: 'skorTema',        nama: 'Kesesuaian Tema Kemerdekaan', bobot: 25,
+    desc: 'Sejauh mana dekorasi mencerminkan tema 17 Agustus / Kemerdekaan.' },
+  { key: 'skorKerapian',    nama: 'Kerapian & Kebersihan',       bobot: 25,
+    desc: 'Kerapihan pemasangan ornamen dan kebersihan area kelas.' },
+  { key: 'skorKreativitas', nama: 'Kreativitas & Keunikan',      bobot: 20,
+    desc: 'Ide orisinal dan hal unik yang membedakan dari kelas lain.' },
+  { key: 'skorKekompakan',  nama: 'Kekompakan / Gotong Royong',  bobot: 15,
+    desc: 'Keterlibatan dan kekompakan siswa dalam mengerjakan dekorasi.' },
+  { key: 'skorKeamanan',    nama: 'Keamanan Dekorasi',           bobot: 15,
+    desc: 'Dekorasi tidak membahayakan / mengganggu aktivitas belajar.' }
+];
+
+const KRITERIA_BONUS_DEF = [
+  { key: 'skorKualitasLukisan',   nama: 'Kualitas & Kerapian Lukisan', bobotMax: 7,
+    desc: 'Teknik, kerapian garis, dan komposisi warna lukisan.' },
+  { key: 'skorMaknaLukisan',      nama: 'Kesesuaian Makna Lukisan',    bobotMax: 5,
+    desc: 'Kesesuaian lukisan dengan tema kemerdekaan atau logo kelas.' },
+  { key: 'skorTingkatKesulitan',  nama: 'Tingkat Kesulitan Pengerjaan', bobotMax: 3,
+    desc: 'Kompleksitas teknik dan usaha pengerjaan lukisan.' }
+];
+
+let masterData = { kelasList: [], juriList: [] };
+let statusSudahDinilai = [];
+let kelasTerpilihTipe = null;
+
+function switchTab(tab){
+  document.getElementById('view-input').classList.toggle('active', tab==='input');
+  document.getElementById('view-lb').classList.toggle('active', tab==='lb');
+  document.getElementById('tab-input').classList.toggle('active', tab==='input');
+  document.getElementById('tab-lb').classList.toggle('active', tab==='lb');
+  if(tab==='lb'){ muatLeaderboard(); }
+}
+
+function showToast(msg, ok){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (ok ? 'ok' : 'err');
+  setTimeout(()=>{ t.className = 'toast ' + (ok?'ok':'err'); }, 3200);
+}
+
+// ---------- MUAT DATA MASTER ----------
+async function muatMaster(){
+  try{
+    const res = await fetch(WEB_APP_URL + '?action=master');
+    const data = await res.json();
+    if(data.status !== 'success') throw new Error(data.message);
+    masterData = data;
+
+    const selJuri = document.getElementById('selJuri');
+    data.juriList.forEach(nama=>{
+      const opt = document.createElement('option');
+      opt.value = nama; opt.textContent = nama;
+      selJuri.appendChild(opt);
+    });
+
+    const selKelas = document.getElementById('selKelas');
+    data.kelasList.forEach(k=>{
+      const opt = document.createElement('option');
+      opt.value = k.kelas;
+      opt.textContent = k.kelas + (k.tipe === 'B' ? ' (Ornamen + Lukisan)' : ' (Ornamen)');
+      opt.dataset.tipe = k.tipe;
+      selKelas.appendChild(opt);
+    });
+  }catch(err){
+    showToast('Gagal memuat data master: ' + err.message, false);
+  }
+}
+
+async function onJuriChange(){
+  const nama = document.getElementById('selJuri').value;
+  statusSudahDinilai = [];
+  const chipbar = document.getElementById('statusChips');
+  chipbar.innerHTML = '';
+  if(!nama) return;
+
+  try{
+    const res = await fetch(WEB_APP_URL + '?action=status&namaJuri=' + encodeURIComponent(nama));
+    const data = await res.json();
+    if(data.status === 'success'){
+      statusSudahDinilai = data.sudahDinilai;
+      renderStatusChips();
+    }
+  }catch(err){ /* diamkan, tidak kritikal */ }
+}
+
+function renderStatusChips(){
+  const chipbar = document.getElementById('statusChips');
+  chipbar.innerHTML = '';
+  masterData.kelasList.forEach(k=>{
+    const done = statusSudahDinilai.includes(k.kelas);
+    const chip = document.createElement('span');
+    chip.className = 'chip' + (done ? ' done' : '');
+    chip.textContent = k.kelas;
+    chipbar.appendChild(chip);
+  });
+}
+
+function onKelasChange(){
+  const selKelas = document.getElementById('selKelas');
+  const opt = selKelas.options[selKelas.selectedIndex];
+  const form = document.getElementById('formNilai');
+
+  if(!selKelas.value){
+    form.style.display = 'none';
+    return;
+  }
+  kelasTerpilihTipe = opt.dataset.tipe;
+  renderKriteria();
+  document.getElementById('cardBonus').style.display = (kelasTerpilihTipe === 'B') ? 'block' : 'none';
+  form.style.display = 'block';
+}
+
+function buatSliderItem(container, item, isBonus){
+  const wrap = document.createElement('div');
+  wrap.className = 'kriteria-item';
+  const bobotLabel = isBonus ? ('maks +' + item.bobotMax + ' poin') : (item.bobot + '% bobot');
+  wrap.innerHTML = `
+    <div class="kriteria-head">
+      <span class="kriteria-nama">${item.nama}</span>
+      <span class="kriteria-bobot">${bobotLabel}</span>
+    </div>
+    <div class="kriteria-desc">${item.desc}</div>
+    <div class="skor-row">
+      <input type="range" min="0" max="100" step="1" value="80" id="slider_${item.key}">
+      <span class="skor-badge" id="badge_${item.key}">80</span>
+    </div>`;
+  container.appendChild(wrap);
+  const slider = wrap.querySelector('#slider_' + item.key);
+  const badge = wrap.querySelector('#badge_' + item.key);
+  slider.addEventListener('input', ()=>{ badge.textContent = slider.value; });
+}
+
+function renderKriteria(){
+  const dasarC = document.getElementById('kriteriaDasar');
+  const bonusC = document.getElementById('kriteriaBonus');
+  dasarC.innerHTML = ''; bonusC.innerHTML = '';
+  KRITERIA_DASAR_DEF.forEach(item => buatSliderItem(dasarC, item, false));
+  if(kelasTerpilihTipe === 'B'){
+    KRITERIA_BONUS_DEF.forEach(item => buatSliderItem(bonusC, item, true));
+  }
+}
+
+// ---------- SUBMIT ----------
+document.getElementById('formNilai').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const namaJuri = document.getElementById('selJuri').value;
+  const kelas = document.getElementById('selKelas').value;
+  if(!namaJuri || !kelas){ showToast('Pilih nama juri dan kelas terlebih dahulu.', false); return; }
+
+  const payload = {
+    namaJuri: namaJuri,
+    kelas: kelas,
+    tipeKelas: kelasTerpilihTipe,
+    catatan: document.getElementById('catatan').value
+  };
+  KRITERIA_DASAR_DEF.forEach(item=>{
+    payload[item.key] = document.getElementById('slider_' + item.key).value;
+  });
+  if(kelasTerpilihTipe === 'B'){
+    KRITERIA_BONUS_DEF.forEach(item=>{
+      payload[item.key] = document.getElementById('slider_' + item.key).value;
+    });
+  }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true; btn.textContent = 'Menyimpan…';
+
+  try{
+    const res = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.status === 'success'){
+      showToast('Penilaian untuk ' + kelas + ' berhasil disimpan ✓', true);
+      if(!statusSudahDinilai.includes(kelas)) statusSudahDinilai.push(kelas);
+      renderStatusChips();
+    }else{
+      showToast(data.message || 'Gagal menyimpan penilaian.', false);
+    }
+  }catch(err){
+    showToast('Gagal terhubung ke server: ' + err.message, false);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Simpan Penilaian';
+  }
+});
+
+// ---------- LEADERBOARD ----------
+async function muatLeaderboard(){
+  try{
+    const res = await fetch(WEB_APP_URL);
+    const data = await res.json();
+    if(data.status !== 'success') throw new Error(data.message);
+    renderLeaderboard(data.rekap);
+    document.getElementById('lbUpdated').textContent = 'diperbarui ' + new Date().toLocaleTimeString('id-ID');
+  }catch(err){
+    document.getElementById('lbList').innerHTML = '<div class="empty-state">Gagal memuat rekap: ' + err.message + '</div>';
+  }
+}
+
+function renderLeaderboard(rekap){
+  const list = document.getElementById('lbList');
+  if(!rekap || rekap.length === 0){
+    list.innerHTML = '<div class="empty-state">Belum ada penilaian masuk.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  rekap.forEach(r=>{
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (r.ranking===1?' top1':r.ranking===2?' top2':r.ranking===3?' top3':'');
+    row.innerHTML = `
+      <div class="lb-rank">${r.ranking}</div>
+      <div class="lb-info">
+        <div class="lb-kelas">${r.kelas} <span style="color:var(--abu); font-weight:500;">(${r.tipe === 'B' ? 'Ornamen+Lukisan' : 'Ornamen'})</span></div>
+        <div class="lb-meta">${r.jumlahJuri}/5 juri menilai &middot; dasar ${r.rataDasar}${r.tipe==='B' ? ' + bonus '+r.rataBonus : ''}</div>
+      </div>
+      <div class="lb-score">${r.rataTotal}<small>skor</small></div>`;
+    list.appendChild(row);
+  });
+}
+
+// auto-refresh leaderboard tiap 15 detik saat tab aktif
+setInterval(()=>{
+  if(document.getElementById('view-lb').classList.contains('active')){
+    muatLeaderboard();
+  }
+}, 15000);
+
+muatMaster();
+</script>
+</body>
+</html>
