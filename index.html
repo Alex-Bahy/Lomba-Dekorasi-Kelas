@@ -15,6 +15,8 @@
     --abu: #8A7E7E;
     --garis: #EAD9D9;
     --emas: #C79A3B;
+    --hijau: #2E8B4F;
+    --hijau-muda: #E9F5EC;
     --radius: 14px;
     --shadow: 0 6px 20px rgba(200,16,46,0.10);
   }
@@ -108,6 +110,31 @@
   .chip.done{ background:#E7F5EA; color:#1F7A3E; border-color:#BFE3C9; }
   .chip.done::before{ content:"✓ "; }
 
+  /* ===== TOGGLE "ADA LUKISAN / ADA TAMAN" ===== */
+  .toggle-card{
+    display:flex; align-items:center; justify-content:space-between;
+    gap: 12px; padding: 14px 16px; border-radius: 12px;
+    background: var(--krem); border: 1.5px solid var(--garis); margin-bottom: 10px;
+  }
+  .toggle-card:last-child{ margin-bottom:0; }
+  .toggle-text{ flex:1; }
+  .toggle-title{ font-size: 14px; font-weight: 700; }
+  .toggle-sub{ font-size: 11.5px; color: var(--abu); margin-top: 2px; }
+  .switch{ position:relative; width:48px; height:28px; flex-shrink:0; }
+  .switch input{ opacity:0; width:0; height:0; position:absolute; }
+  .switch-track{
+    position:absolute; inset:0; background:#D9CFCF; border-radius:999px;
+    transition: background 0.2s ease; cursor:pointer;
+  }
+  .switch-track::before{
+    content:""; position:absolute; width:22px; height:22px; left:3px; top:3px;
+    background:var(--putih); border-radius:50%; transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .switch input:checked + .switch-track{ background: var(--emas); }
+  .switch input:checked + .switch-track::before{ transform: translateX(20px); }
+  .toggle-card.taman .switch input:checked + .switch-track{ background: var(--hijau); }
+
   /* ===== KRITERIA ===== */
   .kriteria-item{
     padding: 14px 0; border-top: 1px solid var(--garis);
@@ -141,6 +168,17 @@
     background: var(--emas); padding: 2px 8px; border-radius:999px; margin-left:6px;
     letter-spacing:0.5px; text-transform:uppercase; vertical-align:middle;
   }
+
+  .taman-section .kriteria-nama{ color: var(--hijau); }
+  .taman-label{
+    display:inline-block; font-size:10px; font-weight:800; color: var(--putih);
+    background: var(--hijau); padding: 2px 8px; border-radius:999px; margin-left:6px;
+    letter-spacing:0.5px; text-transform:uppercase; vertical-align:middle;
+  }
+  .taman-section input[type="range"]::-webkit-slider-thumb{ background: var(--hijau); box-shadow: 0 2px 6px rgba(46,139,79,0.4); }
+  .taman-section .skor-badge{ color: var(--hijau); background: var(--hijau-muda); }
+  .bonus-section input[type="range"]::-webkit-slider-thumb{ background: var(--emas); box-shadow: 0 2px 6px rgba(199,154,59,0.4); }
+  .bonus-section .skor-badge{ color: var(--emas); background: #FBF2E0; }
 
   button.submit-btn{
     width:100%; padding:16px; border:none; border-radius: 12px;
@@ -179,6 +217,12 @@
   .lb-info{ flex:1; min-width:0; }
   .lb-kelas{ font-weight:700; font-size:14.5px; }
   .lb-meta{ font-size:11.5px; color:var(--abu); }
+  .lb-badges{ margin-top:3px; display:flex; gap:4px; flex-wrap:wrap; }
+  .lb-badge{
+    font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px;
+  }
+  .lb-badge.lukisan{ background:#FBF2E0; color:var(--emas); }
+  .lb-badge.taman{ background:var(--hijau-muda); color:var(--hijau); }
   .lb-score{ font-weight:800; font-size:18px; color: var(--merah); text-align:right; }
   .lb-score small{ display:block; font-weight:600; font-size:10px; color:var(--abu); }
   .empty-state{ text-align:center; color:var(--abu); font-size:13px; padding: 30px 10px; }
@@ -223,6 +267,32 @@
     </div>
 
     <form id="formNilai" style="display:none;">
+
+      <div class="card">
+        <label class="field-label" style="margin-bottom:12px;">Cek dulu di lokasi</label>
+        <div class="toggle-card">
+          <div class="toggle-text">
+            <div class="toggle-title">Kelas ini membuat lukisan?</div>
+            <div class="toggle-sub">Nilai lukisan hanya muncul &amp; dihitung kalau diaktifkan</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleLukisan" onchange="onToggleBonus()">
+            <span class="switch-track"></span>
+          </label>
+        </div>
+        <div class="toggle-card taman">
+          <div class="toggle-text">
+            <div class="toggle-title">Kelas ini punya taman kelas?</div>
+            <div class="toggle-sub">Nilai taman hanya muncul &amp; dihitung kalau diaktifkan</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleTaman" onchange="onToggleBonus()">
+            <span class="switch-track"></span>
+          </label>
+        </div>
+        <p class="legend" style="margin-top:10px; text-align:left;">Ini menandai apa yang benar-benar Anda lihat di kelas, bukan asumsi awal. Kelas tanpa lukisan/taman tetap dinilai penuh (maks 100) dari kriteria wajib di bawah — lukisan &amp; taman murni poin tambahan, tidak mengurangi porsi kriteria wajib.</p>
+      </div>
+
       <div class="card">
         <div class="kriteria-head" style="margin-bottom:12px;">
           <span class="kriteria-nama" style="font-size:15px;">Kriteria Dasar</span>
@@ -233,9 +303,16 @@
 
       <div class="card bonus-section" id="cardBonus" style="display:none;">
         <div class="kriteria-head" style="margin-bottom:12px;">
-          <span class="kriteria-nama" style="font-size:15px;">Kriteria Tambahan <span class="bonus-label">Bonus • Tipe B</span></span>
+          <span class="kriteria-nama" style="font-size:15px;">Kriteria Lukisan <span class="bonus-label">Bonus +15</span></span>
         </div>
         <div id="kriteriaBonus"></div>
+      </div>
+
+      <div class="card taman-section" id="cardTaman" style="display:none;">
+        <div class="kriteria-head" style="margin-bottom:12px;">
+          <span class="kriteria-nama" style="font-size:15px;">Kriteria Taman Kelas <span class="taman-label">Bonus +15</span></span>
+        </div>
+        <div id="kriteriaTaman"></div>
       </div>
 
       <div class="card">
@@ -265,7 +342,18 @@
 // =====================================================================
 // GANTI URL INI dengan URL Web App hasil deploy Apps Script Anda
 // =====================================================================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCVMcTe-dyR7AwMXhwCK2Pf5xu2FyGKNULFZzDznBMWbUTUhZMHHUICcR2vhU0nYON/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxuYfCPF4-Um-WYQQVxSU-FcCs8vwAKiOYvdopyzQetosJXhjDAlMG2PHEnO42XGFp/exec";
+
+// =====================================================================
+// TIM JURI — daftar tetap berdasarkan jabatan, bukan diambil dari sheet
+// =====================================================================
+const JURI_LIST = [
+  "Kepala Sekolah",
+  "Wakasek Sarana & Prasarana",
+  "Wakasek Kesiswaan",
+  "Wakasek Kurikulum",
+  "Wakasek Hubungan Masyarakat"
+];
 
 const KRITERIA_DASAR_DEF = [
   { key: 'skorTema',        nama: 'Kesesuaian Tema Kemerdekaan', bobot: 25,
@@ -289,9 +377,15 @@ const KRITERIA_BONUS_DEF = [
     desc: 'Kompleksitas teknik dan usaha pengerjaan lukisan.' }
 ];
 
+const KRITERIA_TAMAN_DEF = [
+  { key: 'skorKerapianTaman', nama: 'Kerapian & Perawatan Taman', bobotMax: 8,
+    desc: 'Kerapian penataan tanaman dan kebersihan area taman kelas.' },
+  { key: 'skorEstetikaTaman', nama: 'Estetika & Kesesuaian Tema Taman', bobotMax: 7,
+    desc: 'Keindahan penataan taman dan kesesuaiannya dengan tema kemerdekaan/kelas.' }
+];
+
 let masterData = { kelasList: [], juriList: [] };
 let statusSudahDinilai = [];
-let kelasTerpilihTipe = null;
 
 function switchTab(tab){
   document.getElementById('view-input').classList.toggle('active', tab==='input');
@@ -308,31 +402,33 @@ function showToast(msg, ok){
   setTimeout(()=>{ t.className = 'toast ' + (ok?'ok':'err'); }, 3200);
 }
 
-// ---------- MUAT DATA MASTER ----------
+// ---------- ISI DROPDOWN JURI (tetap, tidak tergantung koneksi backend) ----------
+function muatJuriList(){
+  const selJuri = document.getElementById('selJuri');
+  JURI_LIST.forEach(nama=>{
+    const opt = document.createElement('option');
+    opt.value = nama; opt.textContent = nama;
+    selJuri.appendChild(opt);
+  });
+  masterData.juriList = JURI_LIST;
+}
+
+// ---------- MUAT DATA MASTER (kelas tetap dari sheet) ----------
 async function muatMaster(){
   try{
     const res = await fetch(WEB_APP_URL + '?action=master');
     const data = await res.json();
     if(data.status !== 'success') throw new Error(data.message);
-    masterData = data;
-
-    const selJuri = document.getElementById('selJuri');
-    data.juriList.forEach(nama=>{
-      const opt = document.createElement('option');
-      opt.value = nama; opt.textContent = nama;
-      selJuri.appendChild(opt);
-    });
+    masterData.kelasList = data.kelasList;
 
     const selKelas = document.getElementById('selKelas');
-    data.kelasList.forEach(k=>{
+    data.kelasList.forEach(nama=>{
       const opt = document.createElement('option');
-      opt.value = k.kelas;
-      opt.textContent = k.kelas + (k.tipe === 'B' ? ' (Ornamen + Lukisan)' : ' (Ornamen)');
-      opt.dataset.tipe = k.tipe;
+      opt.value = nama; opt.textContent = nama;
       selKelas.appendChild(opt);
     });
   }catch(err){
-    showToast('Gagal memuat data master: ' + err.message, false);
+    showToast('Gagal memuat data kelas: ' + err.message, false);
   }
 }
 
@@ -356,43 +452,52 @@ async function onJuriChange(){
 function renderStatusChips(){
   const chipbar = document.getElementById('statusChips');
   chipbar.innerHTML = '';
-  masterData.kelasList.forEach(k=>{
-    const done = statusSudahDinilai.includes(k.kelas);
+  masterData.kelasList.forEach(nama=>{
+    const done = statusSudahDinilai.includes(nama);
     const chip = document.createElement('span');
     chip.className = 'chip' + (done ? ' done' : '');
-    chip.textContent = k.kelas;
+    chip.textContent = nama;
     chipbar.appendChild(chip);
   });
 }
 
 function onKelasChange(){
   const selKelas = document.getElementById('selKelas');
-  const opt = selKelas.options[selKelas.selectedIndex];
   const form = document.getElementById('formNilai');
 
   if(!selKelas.value){
     form.style.display = 'none';
     return;
   }
-  kelasTerpilihTipe = opt.dataset.tipe;
+
+  // reset toggle & kriteria tiap ganti kelas — juri menilai apa yang
+  // benar-benar dilihat di kelas ini, bukan bawaan kelas sebelumnya
+  document.getElementById('toggleLukisan').checked = false;
+  document.getElementById('toggleTaman').checked = false;
   renderKriteria();
-  document.getElementById('cardBonus').style.display = (kelasTerpilihTipe === 'B') ? 'block' : 'none';
+  onToggleBonus();
   form.style.display = 'block';
 }
 
-function buatSliderItem(container, item, isBonus){
+function onToggleBonus(){
+  const adaLukisan = document.getElementById('toggleLukisan').checked;
+  const adaTaman = document.getElementById('toggleTaman').checked;
+  document.getElementById('cardBonus').style.display = adaLukisan ? 'block' : 'none';
+  document.getElementById('cardTaman').style.display = adaTaman ? 'block' : 'none';
+}
+
+function buatSliderItem(container, item, satuanLabel){
   const wrap = document.createElement('div');
   wrap.className = 'kriteria-item';
-  const bobotLabel = isBonus ? ('maks +' + item.bobotMax + ' poin') : (item.bobot + '% bobot');
   wrap.innerHTML = `
     <div class="kriteria-head">
       <span class="kriteria-nama">${item.nama}</span>
-      <span class="kriteria-bobot">${bobotLabel}</span>
+      <span class="kriteria-bobot">${satuanLabel}</span>
     </div>
     <div class="kriteria-desc">${item.desc}</div>
     <div class="skor-row">
-      <input type="range" min="0" max="100" step="1" value="80" id="slider_${item.key}">
-      <span class="skor-badge" id="badge_${item.key}">80</span>
+      <input type="range" min="0" max="100" step="1" value="0" id="slider_${item.key}">
+      <span class="skor-badge" id="badge_${item.key}">0</span>
     </div>`;
   container.appendChild(wrap);
   const slider = wrap.querySelector('#slider_' + item.key);
@@ -403,11 +508,12 @@ function buatSliderItem(container, item, isBonus){
 function renderKriteria(){
   const dasarC = document.getElementById('kriteriaDasar');
   const bonusC = document.getElementById('kriteriaBonus');
-  dasarC.innerHTML = ''; bonusC.innerHTML = '';
-  KRITERIA_DASAR_DEF.forEach(item => buatSliderItem(dasarC, item, false));
-  if(kelasTerpilihTipe === 'B'){
-    KRITERIA_BONUS_DEF.forEach(item => buatSliderItem(bonusC, item, true));
-  }
+  const tamanC = document.getElementById('kriteriaTaman');
+  dasarC.innerHTML = ''; bonusC.innerHTML = ''; tamanC.innerHTML = '';
+
+  KRITERIA_DASAR_DEF.forEach(item => buatSliderItem(dasarC, item, item.bobot + '% bobot'));
+  KRITERIA_BONUS_DEF.forEach(item => buatSliderItem(bonusC, item, 'maks +' + item.bobotMax + ' poin'));
+  KRITERIA_TAMAN_DEF.forEach(item => buatSliderItem(tamanC, item, 'maks +' + item.bobotMax + ' poin'));
 }
 
 // ---------- SUBMIT ----------
@@ -417,17 +523,26 @@ document.getElementById('formNilai').addEventListener('submit', async function(e
   const kelas = document.getElementById('selKelas').value;
   if(!namaJuri || !kelas){ showToast('Pilih nama juri dan kelas terlebih dahulu.', false); return; }
 
+  const adaLukisan = document.getElementById('toggleLukisan').checked;
+  const adaTaman = document.getElementById('toggleTaman').checked;
+
   const payload = {
     namaJuri: namaJuri,
     kelas: kelas,
-    tipeKelas: kelasTerpilihTipe,
+    adaLukisan: adaLukisan,
+    adaTaman: adaTaman,
     catatan: document.getElementById('catatan').value
   };
   KRITERIA_DASAR_DEF.forEach(item=>{
     payload[item.key] = document.getElementById('slider_' + item.key).value;
   });
-  if(kelasTerpilihTipe === 'B'){
+  if(adaLukisan){
     KRITERIA_BONUS_DEF.forEach(item=>{
+      payload[item.key] = document.getElementById('slider_' + item.key).value;
+    });
+  }
+  if(adaTaman){
+    KRITERIA_TAMAN_DEF.forEach(item=>{
       payload[item.key] = document.getElementById('slider_' + item.key).value;
     });
   }
@@ -479,11 +594,21 @@ function renderLeaderboard(rekap){
   rekap.forEach(r=>{
     const row = document.createElement('div');
     row.className = 'lb-row' + (r.ranking===1?' top1':r.ranking===2?' top2':r.ranking===3?' top3':'');
+
+    const badges = [];
+    if(r.jumlahJuriLukisan > 0) badges.push('<span class="lb-badge lukisan">🎨 Lukisan (' + r.jumlahJuriLukisan + '/' + r.jumlahJuri + ' juri)</span>');
+    if(r.jumlahJuriTaman > 0) badges.push('<span class="lb-badge taman">🌿 Taman (' + r.jumlahJuriTaman + '/' + r.jumlahJuri + ' juri)</span>');
+
+    const metaParts = ['dasar ' + r.rataDasar];
+    if(r.jumlahJuriLukisan > 0) metaParts.push('lukisan +' + r.rataBonusLukisan);
+    if(r.jumlahJuriTaman > 0) metaParts.push('taman +' + r.rataBonusTaman);
+
     row.innerHTML = `
       <div class="lb-rank">${r.ranking}</div>
       <div class="lb-info">
-        <div class="lb-kelas">${r.kelas} <span style="color:var(--abu); font-weight:500;">(${r.tipe === 'B' ? 'Ornamen+Lukisan' : 'Ornamen'})</span></div>
-        <div class="lb-meta">${r.jumlahJuri}/5 juri menilai &middot; dasar ${r.rataDasar}${r.tipe==='B' ? ' + bonus '+r.rataBonus : ''}</div>
+        <div class="lb-kelas">${r.kelas}</div>
+        <div class="lb-meta">${r.jumlahJuri} juri menilai &middot; ${metaParts.join(' + ')}</div>
+        <div class="lb-badges">${badges.join('')}</div>
       </div>
       <div class="lb-score">${r.rataTotal}<small>skor</small></div>`;
     list.appendChild(row);
@@ -497,6 +622,7 @@ setInterval(()=>{
   }
 }, 15000);
 
+muatJuriList();
 muatMaster();
 </script>
 </body>
